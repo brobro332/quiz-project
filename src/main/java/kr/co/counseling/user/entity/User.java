@@ -1,4 +1,4 @@
-package kr.co.counseling.entity;
+package kr.co.counseling.user.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -8,12 +8,15 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table
+@Table(name = "tbl_user")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private String username;
 
     @Column(nullable = false)
     private String password;

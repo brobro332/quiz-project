@@ -1,28 +1,28 @@
 server:
-  port: 80 # ?? ?? ????
+  port: 80 # 내장 톰캣 포트번호
 
 spring:
-  # H2 Database ??
+  # H2 Database 설정
   datasource:
     driver-class-name: org.h2.Driver
-    url: 'jdbc:h2:mem:test;NON_KEYWORDS=USER'    # H2 DB ?? ?? (In-Memory Mode)
-    # url: 'jdbc:h2:~/test'                      # H2 DB ?? ?? (Embedded Mode)
-    username: '332bro'                           # H2 DB ?? ID (??? ??)
-    password: 'brobro332'                        # H2 DB ?? PW (??? ??)
+    url: 'jdbc:h2:mem:test;NON_KEYWORDS=USER'    # H2 DB 연결 주소 (In-Memory Mode)
+    # url: 'jdbc:h2:~/test'                      # H2 DB 연결 주소 (Embedded Mode)
+    username: '332bro'                           # H2 DB 접속 ID
+    password: 'brobro332'                        # H2 DB 접속 PW
 
-  # H2 Console ??
+  # H2 Console 설정
   h2:
-    console: # H2 DB? ??? ??? ? ?? ??
-      enabled: true           # H2 Console ?? ??
-      path: /h2-console       # H2 Console ?? ??: localhost/h2-console
+    console: # H2 DB를 웹에서 관리할 수 있는 기능
+      enabled: true           # H2 Console 사용 여부
+      path: /h2-console       # H2 Console 접속 주소: localhost/h2-console
 
-  # JPA ??
+  # JPA 설정
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create        # DB ??? ?? (none, create, create-drop, update, validate)
+      ddl-auto: create        # DB 초기화 전략 (none, create, create-drop, update, validate)
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
-        format_sql: true      # ?? ?? ?? (??)
-        show_sql: true        # ?? ?? ??
+        format_sql: true      # 쿼리 로그 포맷
+        show_sql: true        # 쿼리 로그 출력
