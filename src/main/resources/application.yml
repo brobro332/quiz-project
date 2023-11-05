@@ -1,5 +1,5 @@
 server:
-  port: 80 # 내장 톰캣 포트번호
+  port: 8080 # 내장 톰캣 포트번호
 
 spring:
   # H2 Database 설정
@@ -14,7 +14,7 @@ spring:
   h2:
     console: # H2 DB를 웹에서 관리할 수 있는 기능
       enabled: true           # H2 Console 사용 여부
-      path: /h2-console       # H2 Console 접속 주소: localhost/h2-console
+      path: /h2-console       # H2 Console 접속 주소: localhost:포트번호/h2-console
 
   # JPA 설정
   jpa:
