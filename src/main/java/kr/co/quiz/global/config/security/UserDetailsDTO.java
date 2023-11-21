@@ -1,6 +1,6 @@
-package kr.co.counseling.global.config.security;
+package kr.co.quiz.global.config.security;
 
-import kr.co.counseling.user.entity.User;
+import kr.co.quiz.user.entity.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

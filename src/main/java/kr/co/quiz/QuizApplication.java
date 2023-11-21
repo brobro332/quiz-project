@@ -1,13 +1,13 @@
-package kr.co.counseling;
+package kr.co.quiz;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CounselingApplication {
+public class QuizApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CounselingApplication.class, args);
+		SpringApplication.run(QuizApplication.class, args);
 	}
 
 }

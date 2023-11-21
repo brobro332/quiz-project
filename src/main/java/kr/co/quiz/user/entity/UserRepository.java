@@ -1,4 +1,4 @@
-package kr.co.counseling.user.entity;
+package kr.co.quiz.user.entity;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

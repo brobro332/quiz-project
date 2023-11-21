@@ -1,2 +1,2 @@
-# Counseling-Project
-Counseling Appointment and Payment System
+# quiz-project
+Quiz Game and Payment System

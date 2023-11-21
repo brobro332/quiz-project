@@ -1,11 +1,11 @@
-package kr.co.counseling.user;
+package kr.co.quiz.user;
 
-import kr.co.counseling.global.config.jwt.JwtProvider;
-import kr.co.counseling.global.config.jwt.JwtToken;
-import kr.co.counseling.user.dtos.UserReqDTO;
-import kr.co.counseling.user.entity.Role;
-import kr.co.counseling.user.entity.User;
-import kr.co.counseling.user.entity.UserRepository;
+import kr.co.quiz.global.config.jwt.JwtProvider;
+import kr.co.quiz.global.config.jwt.JwtToken;
+import kr.co.quiz.user.dtos.UserReqDTO;
+import kr.co.quiz.user.entity.Role;
+import kr.co.quiz.user.entity.User;
+import kr.co.quiz.user.entity.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

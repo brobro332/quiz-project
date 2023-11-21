@@ -1,4 +1,4 @@
-package kr.co.counseling.global.config;
+package kr.co.quiz.global.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;

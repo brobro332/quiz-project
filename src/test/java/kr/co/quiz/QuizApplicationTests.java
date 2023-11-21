@@ -1,10 +1,10 @@
-package kr.co.counseling;
+package kr.co.quiz;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CounselingApplicationTests {
+class QuizApplicationTests {
 
 	@Test
 	void contextLoads() {

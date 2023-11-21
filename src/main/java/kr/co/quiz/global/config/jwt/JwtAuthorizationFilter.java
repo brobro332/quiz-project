@@ -1,4 +1,4 @@
-package kr.co.counseling.global.config.jwt;
+package kr.co.quiz.global.config.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

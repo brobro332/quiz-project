@@ -1,4 +1,4 @@
-package kr.co.counseling.global.config.jwt;
+package kr.co.quiz.global.config.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

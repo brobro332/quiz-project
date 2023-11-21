@@ -1,7 +1,7 @@
-package kr.co.counseling.global.config.security;
+package kr.co.quiz.global.config.security;
 
-import kr.co.counseling.global.config.jwt.JwtAuthorizationFilter;
-import kr.co.counseling.global.config.jwt.JwtProvider;
+import kr.co.quiz.global.config.jwt.JwtAuthorizationFilter;
+import kr.co.quiz.global.config.jwt.JwtProvider;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

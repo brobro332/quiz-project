@@ -1,7 +1,7 @@
-package kr.co.counseling.user;
+package kr.co.quiz.user;
 
-import kr.co.counseling.global.config.jwt.JwtToken;
-import kr.co.counseling.user.dtos.UserReqDTO;
+import kr.co.quiz.global.config.jwt.JwtToken;
+import kr.co.quiz.user.dtos.UserReqDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
