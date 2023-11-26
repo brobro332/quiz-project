@@ -1,7 +1,7 @@
-package kr.co.counseling.global.config.security;
+package kr.co.quiz.global.config.security;
 
-import kr.co.counseling.user.entity.User;
-import kr.co.counseling.user.entity.UserRepository;
+import kr.co.quiz.user.entity.User;
+import kr.co.quiz.user.entity.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

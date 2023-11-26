@@ -1,8 +1,10 @@
-package kr.co.counseling.global.config.jwt;
+package kr.co.quiz.global.config.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.xml.bind.DatatypeConverter;
+import kr.co.quiz.user.entity.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +23,9 @@ import java.util.stream.Collectors;
 @Component
 public class JwtProvider {
     private final Key key;
-    private static final long ACCESS_TOKEN_VALIDATION_SECONDS = 1000L * 60 * 60; // 1. AccessToken: 1시간
+    private final UserRepository userRepository;
+    // private static final long ACCESS_TOKEN_VALIDATION_SECONDS = 1000L * 60 * 60; // 1. AccessToken: 1시간
+    private static final long ACCESS_TOKEN_VALIDATION_SECONDS = 1000L * 60; // 1. AccessToken: 1분
     private static final long REFRESH_TOKEN_VALIDATION_SECONDS = 1000L * 60 * 60 * 24; // 2. RefreshToken: 1주
 
     /**
@@ -29,8 +33,8 @@ public class JwtProvider {
      * 1. SECRET_KEY 값을 Base64로 인코딩된 바이트 배열로 변환
      * 2. 바이트 배열 값을 HMAC-SHA 알고리즘을 사용하여 서명 키를 생성
      */
-    public JwtProvider(@Value("${SECRET_KEY}") String SECRET_KEY) {
-
+    public JwtProvider(@Value("${SECRET_KEY}") String SECRET_KEY, UserRepository userRepository) {
+        this.userRepository = userRepository;
         byte[] secretByteKey = DatatypeConverter.parseBase64Binary(SECRET_KEY);
         this.key = Keys.hmacShaKeyFor(secretByteKey);
     }
@@ -55,6 +59,7 @@ public class JwtProvider {
 
         // refreshToken 생성
         String refreshToken = Jwts.builder()
+                .setSubject(authentication.getName())
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDATION_SECONDS))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -65,6 +70,16 @@ public class JwtProvider {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    public String generateAccessToken(UserDetails user) {
+
+        return Jwts.builder()
+                .setSubject(user.getUsername())
+                .claim("auth", user.getAuthorities())
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDATION_SECONDS))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
     }
 
     /* ====================================================================== */
@@ -91,9 +106,9 @@ public class JwtProvider {
     }
 
     /**
-     * validationToken: token의 유효성을 검증 후 예외처리
+     * validateToken: token의 유효성을 검증 후 예외처리
      */
-    public boolean validationToken(String token) {
+    public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build()
                     .parseClaimsJws(token);
@@ -113,17 +128,58 @@ public class JwtProvider {
     }
 
     /**
-     * parseClaims: accessToken의 유효성을 검사한 후 유효하면 Claims 반환
+     * parseClaims: token의 유효성을 검사한 후 유효하면 Claims 반환
      */
-    private Claims parseClaims(String accessToken) {
+    public Claims parseClaims(String token) {
         try {
 
             return Jwts.parserBuilder().setSigningKey(key).build()
-                    .parseClaimsJws(accessToken)
+                    .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
 
             return e.getClaims();
         }
+    }
+
+    /**
+     * resolveToken: JWT 토큰 추출
+     */
+    public String resolveAccessToken(HttpServletRequest request) {
+        // Authorization 헤더에는 토큰 값이 포함되어있음
+        if(request.getHeader("Authorization") != null ) {
+            return request.getHeader("Authorization").substring(7);
+        }
+
+        return null;
+    }
+
+    /**
+     * resolveRefreshToken: Request의 Header에서 refreshToken 값을 가져옴
+     */
+    public String resolveRefreshToken(HttpServletRequest request) {
+        if(request.getHeader("refreshToken") != null ) {
+            return request.getHeader("refreshToken").substring(7);
+        }
+
+        return null;
+    }
+
+    public boolean compareRefreshToken(String username, String refreshToken) {
+        kr.co.quiz.user.entity.User user = userRepository.findOptionalByUsername(username)
+                .orElseThrow(()->{
+                    return new IllegalArgumentException("해당 사용자를 찾을 수 없습니다.");
+                });
+
+        boolean flag = false;
+        if (user != null) {
+            String storedRefreshToken = user.getRefreshToken();
+
+            if (refreshToken.equals(storedRefreshToken)) {
+                flag = true;
+            }
+        }
+
+        return flag;
     }
 }

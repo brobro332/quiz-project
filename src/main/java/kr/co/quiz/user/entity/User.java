@@ -1,7 +1,10 @@
-package kr.co.counseling.user.entity;
+package kr.co.quiz.user.entity;
 
 import jakarta.persistence.*;
+import kr.co.quiz.game.entity.Game;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,6 +23,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = true)
+    private String nickname;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -27,11 +33,16 @@ public class User {
     @Column
     private String refreshToken;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Game> games;
+
+
     @Builder
-    public User(String username, String password, Role role) {
+    public User(String username, String password, String nickname, Role role) {
 
         this.username = username;
         this.password = password;
+        this.nickname = nickname;
         this.role = role;
     }
 }

@@ -1,4 +1,4 @@
-package kr.co.counseling.global.config;
+package kr.co.quiz.global.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -6,7 +6,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
-@PropertySource("file:C:/tools/counseling-server.txt")
+@PropertySource("file:C:/tools/quiz-server.txt")
 public class EnvProperties {
 
     @Autowired

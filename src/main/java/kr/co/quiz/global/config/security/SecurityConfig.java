@@ -1,7 +1,7 @@
-package kr.co.counseling.global.config.security;
+package kr.co.quiz.global.config.security;
 
-import kr.co.counseling.global.config.jwt.JwtAuthorizationFilter;
-import kr.co.counseling.global.config.jwt.JwtProvider;
+import kr.co.quiz.global.config.jwt.JwtAuthorizationFilter;
+import kr.co.quiz.global.config.jwt.JwtProvider;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,8 +20,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SecurityConfig {
     private final JwtProvider jwtProvider;
-    public SecurityConfig(JwtProvider jwtProvider) {
+    private final UserDetailsServiceImpl userDetailsService;
+    public SecurityConfig(JwtProvider jwtProvider, UserDetailsServiceImpl userDetailsService) {
         this.jwtProvider = jwtProvider;
+        this.userDetailsService = userDetailsService;
     }
 
     /**
@@ -82,7 +84,7 @@ public class SecurityConfig {
                 )
 
                 // JWT 필터 추가
-                .addFilterBefore(new JwtAuthorizationFilter((jwtProvider)), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthorizationFilter(jwtProvider, userDetailsService), UsernamePasswordAuthenticationFilter.class)
 
                 // H2-Console에 접속하기 위한 설정
                 .headers(authorize -> authorize.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));

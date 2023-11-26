@@ -1,4 +1,4 @@
-package kr.co.counseling.user.dtos;
+package kr.co.quiz.user.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
