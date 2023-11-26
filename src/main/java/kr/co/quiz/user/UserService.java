@@ -40,6 +40,7 @@ public class UserService {
         User user = User.builder()
                 .username(userReqDTO.getUsername())
                 .password(passwordEncoder.encode(userReqDTO.getPassword()))
+                .nickname(null)
                 .role(Role.USER)
                 .build();
 
@@ -59,11 +60,19 @@ public class UserService {
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userReqDTO.getUsername(), userReqDTO.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        JwtToken token = jwtProvider.generateJwtToken(authentication);
-
-        // 로그인할 때마다 refreshToken 갱신
-        joinedUser.get().setRefreshToken(token.getRefreshToken());
+        JwtToken token = jwtProvider.generateJwtToken(authentication); // 로그인할 때마다 accessToken + refreshToken 갱신
+        
+        joinedUser.get().setRefreshToken(token.getRefreshToken()); // refreshToken 값은 DB에 저장
 
         return token;
+    }
+
+    @Transactional
+    public User selectUser(String username) {
+
+        return userRepository.findOptionalByUsername(username)
+                .orElseThrow(()->{
+                    return new IllegalArgumentException("해당 회원을 찾을 수 없습니다.");
+                });
     }
 }

@@ -5,7 +5,9 @@ class Login extends Component {
   state = {
     username: "",
     password: "",
-    loggedIn: false,
+    loading: false,
+    error: null,
+    user: null,
   };
 
   handleInputChange = (e) => {
@@ -14,32 +16,48 @@ class Login extends Component {
   };
 
   handleSubmit = (e) => {
+    e.preventDefault();
+
     const { username, password } = this.state;
+    this.setState({ loading: true, error: null });
 
     axios.post("http://localhost:8080/api/v1/user/login", { username, password })
-    .then((response) => {
-      alert("로그인에 성공하였습니다.");
-      console.log(response.status);
-      this.setState(() => { loggedIn: true });
-    }).catch((error) => { 
-      alert(error);
-    });
-  }
+      .then((response) => {
+        const { accessToken, refreshToken } = response.data;
+
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+
+        console.log("AccessToken:", accessToken); // 로그에 AccessToken 출력
+
+        this.setState({
+          loading: false,
+          user: response.data, // assuming the server sends user data on successful login
+        });
+      })
+      .catch((error) => {
+        this.setState({
+          loading: false,
+          error: "로그인에 실패하였습니다. 사용자명과 비밀번호를 확인해주세요.",
+        });
+      });
+  };
 
   render() {
-    const { username, password, loggedIn } = this.state;
+    const { username, password, loading, error, user } = this.state;
 
-    if (loggedIn) {
+    if (user) {
       return (
         <div>
           <h2>로그인 성공</h2>
-          <p>환영합니다, {username}!</p>
+          <p>환영합니다, {user.username}!</p>
         </div>
       );
     } else {
       return (
         <div>
           <h2>Login</h2>
+          {error && <p style={{ color: 'red' }}>{error}</p>}
           <form onSubmit={this.handleSubmit}>
             <div>
               <input
@@ -59,7 +77,9 @@ class Login extends Component {
                 placeholder="Password"
               />
             </div>
-            <button type="submit">Login</button>
+            <button type="submit" disabled={loading}>
+              {loading ? '로그인 중...' : 'Login'}
+            </button>
           </form>
         </div>
       );
