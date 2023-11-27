@@ -27,20 +27,12 @@ public class JwtProvider {
     private static final long ACCESS_TOKEN_VALIDATION_SECONDS = 1000L * 60 * 30; // 1. AccessToken: 30분
     private static final long REFRESH_TOKEN_VALIDATION_SECONDS = 1000L * 60 * 60 * 24; // 2. RefreshToken: 1주
 
-    /**
-     * JwtProvider: JWT의 서명을 생성 및 검증하기 위한 Key 생성
-     * 1. SECRET_KEY 값을 Base64로 인코딩된 바이트 배열로 변환
-     * 2. 바이트 배열 값을 HMAC-SHA 알고리즘을 사용하여 서명 키를 생성
-     */
     public JwtProvider(@Value("${SECRET_KEY}") String SECRET_KEY, UserRepository userRepository) {
         this.userRepository = userRepository;
         byte[] secretByteKey = DatatypeConverter.parseBase64Binary(SECRET_KEY);
         this.key = Keys.hmacShaKeyFor(secretByteKey);
     }
 
-    /**
-     * generateJwtToken: JWT 토큰 생성
-     */
     public JwtToken generateJwtToken(Authentication authentication) {
 
         // 사용자의 권한을 추출하여 쉼표로 구분된 문자열로 변환
@@ -81,11 +73,6 @@ public class JwtProvider {
                 .compact();
     }
 
-    /* ====================================================================== */
-
-    /**
-     * getAuthentication: 토큰의 사용자 이름과 Claims 헤더의 "auth" 값을 통해 Authentication 객체 생성 및 반환
-     */
     public Authentication getAuthentication(String accessToken) {
         Claims claims = parseClaims(accessToken);
 
@@ -104,9 +91,6 @@ public class JwtProvider {
         return new UsernamePasswordAuthenticationToken(user, "", authorities);
     }
 
-    /**
-     * validateToken: token의 유효성을 검증 후 예외처리
-     */
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build()
@@ -126,9 +110,6 @@ public class JwtProvider {
         return false;
     }
 
-    /**
-     * parseClaims: token의 유효성을 검사한 후 유효하면 Claims 반환
-     */
     public Claims parseClaims(String token) {
         try {
 
@@ -141,9 +122,6 @@ public class JwtProvider {
         }
     }
 
-    /**
-     * resolveToken: JWT 토큰 추출
-     */
     public String resolveAccessToken(HttpServletRequest request) {
         // Authorization 헤더에는 토큰 값이 포함되어있음
         if(request.getHeader("Authorization") != null ) {
@@ -153,9 +131,6 @@ public class JwtProvider {
         return null;
     }
 
-    /**
-     * resolveRefreshToken: Request의 Header에서 refreshToken 값을 가져옴
-     */
     public String resolveRefreshToken(HttpServletRequest request) {
         if(request.getHeader("refreshToken") != null ) {
             return request.getHeader("refreshToken").substring(7);

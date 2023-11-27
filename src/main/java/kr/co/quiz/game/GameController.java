@@ -14,7 +14,7 @@ public class GameController {
     /**
      * @apiNote 퀴즈게임 생성 컨트롤러
      * @param create title, description, username
-     * @return ResponseEntity.ok
+     * @return Message
      */
     @PostMapping
     public ResponseEntity<?> createGame(@RequestBody GameReqDTO.CREATE create) {
@@ -26,7 +26,7 @@ public class GameController {
     /**
      * @apiNote 퀴즈게임 수정 컨트롤러
      * @param update id, title, description
-     * @return ResponseEntity.ok
+     * @return Message
      */
     @PutMapping
     public ResponseEntity<?> updateGame(@RequestBody GameReqDTO.UPDATE update) {
@@ -38,7 +38,7 @@ public class GameController {
     /**
      * @apiNote 퀴즈게임 삭제 컨트롤러
      * @param delete id
-     * @return ResponseEntity.ok
+     * @return Message
      */
     @DeleteMapping
     public ResponseEntity<?> deleteGame(@RequestBody GameReqDTO.DELETE delete) {

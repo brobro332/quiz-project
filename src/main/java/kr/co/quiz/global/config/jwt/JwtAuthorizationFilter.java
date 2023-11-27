@@ -31,9 +31,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         }
     }
 
-    /**
-     * doFilterInternal: 요청과 응답을 가로채서 사용자의 인증 및 권한 부여
-     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String accessToken = jwtProvider.resolveAccessToken(request);

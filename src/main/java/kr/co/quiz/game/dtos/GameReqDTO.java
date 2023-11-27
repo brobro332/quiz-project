@@ -29,8 +29,6 @@ public class GameReqDTO {
     public class DELETE {
         private Long id;
 
-        public DELETE() {
-
-        }
+        public DELETE() {   }
     }
 }
