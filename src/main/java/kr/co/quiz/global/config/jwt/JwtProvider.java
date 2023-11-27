@@ -24,8 +24,7 @@ import java.util.stream.Collectors;
 public class JwtProvider {
     private final Key key;
     private final UserRepository userRepository;
-    // private static final long ACCESS_TOKEN_VALIDATION_SECONDS = 1000L * 60 * 60; // 1. AccessToken: 1시간
-    private static final long ACCESS_TOKEN_VALIDATION_SECONDS = 1000L * 60; // 1. AccessToken: 1분
+    private static final long ACCESS_TOKEN_VALIDATION_SECONDS = 1000L * 60 * 30; // 1. AccessToken: 30분
     private static final long REFRESH_TOKEN_VALIDATION_SECONDS = 1000L * 60 * 60 * 24; // 2. RefreshToken: 1주
 
     /**

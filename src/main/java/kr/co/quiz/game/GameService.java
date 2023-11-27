@@ -15,24 +15,62 @@ public class GameService {
     private final GameRepository gameRepository;
     private final UserService userService;
 
-    /** [createGame]
-     * 1. 회원 조회
-     * 2. 퀴즈 게임 생성
-     * 3. 데이터베이스에 저장
+    /**
+     * @implNote 회원 조회 및 퀴즈게임 생성
+     * @param create title, description, username
      */
     @Transactional
-    public void createGame(GameReqDTO gameReqDTO) {
+    public void createGame(GameReqDTO.CREATE create) {
         // 회원 조회
-        User user = userService.selectUser(gameReqDTO.getUsername());
+        User user = userService.selectUser(create.getUsername());
 
-        // 퀴즈 게임 생성
+        // 퀴즈게임 생성
         Game game = Game.builder()
-                .title(gameReqDTO.getTitle())
-                .description(gameReqDTO.getDescription())
+                .title(create.getTitle())
+                .description(create.getDescription())
                 .user(user)
                 .build();
 
         // 데이터베이스에 저장
         gameRepository.save(game);
+    }
+
+    /**
+     * @implNote 퀴즈게임 조회 및 수정
+     * @param update id, title, description
+     */
+    @Transactional
+    public void updateGame(GameReqDTO.UPDATE update) {
+        // id를 통해 퀴즈게임 조회
+        Game game = gameRepository.findOptionalById(update.getId())
+                .orElseThrow(()->{
+                    return new IllegalArgumentException("해당 퀴즈게임을 찾을 수 없습니다.");
+                });
+
+        // id로 조회한 퀴즈게임이 존재한다면
+        if (game != null) {
+            game = Game.builder()
+                    .title(update.getTitle())
+                    .description(update.getDescription())
+                    .build();
+        }
+    }
+
+    /**
+     * @implNote 퀴즈게임 조회 및 삭제
+     * @param delete id
+     */
+    @Transactional
+    public void deleteGame(GameReqDTO.DELETE delete) {
+        // id를 통해 퀴즈게임 조회
+        Game game = gameRepository.findOptionalById(delete.getId())
+                .orElseThrow(()->{
+                    return new IllegalArgumentException("해당 퀴즈게임을 찾을 수 없습니다.");
+                });
+
+        // id로 조회한 퀴즈게임이 존재한다면
+        if (game != null) {
+            gameRepository.delete(game);
+        }
     }
 }
