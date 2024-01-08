@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 @PropertySource("file:C:/tools/quiz-server.txt")
 public class EnvProperties {
-
     @Autowired
     private Environment env;
 

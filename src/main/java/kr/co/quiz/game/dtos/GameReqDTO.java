@@ -1,15 +1,34 @@
 package kr.co.quiz.game.dtos;
 
-import kr.co.quiz.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
-@Builder
-@AllArgsConstructor
 public class GameReqDTO {
-    private String title;
-    private String description;
-    private String username;
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    public class CREATE {
+        private String title;
+        private String description;
+        private String username;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    public class UPDATE {
+        private Long id;
+        private String title;
+        private String description;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    public class DELETE {
+        private Long id;
+
+        public DELETE() {   }
+    }
 }

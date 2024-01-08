@@ -11,7 +11,6 @@ import java.util.List;
 @Entity
 @Table(name = "tbl_user")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -35,7 +34,6 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Game> games;
-
 
     @Builder
     public User(String username, String password, String nickname, Role role) {

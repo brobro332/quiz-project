@@ -26,17 +26,18 @@ public class UserService {
     private final JwtProvider jwtProvider;
 
     /**
-     * join: 회원가입에 대한 비즈니스 로직
+     * @implNote 사용자가 이미 가입됐는지 확인 후 아니라면 회원가입
+     * @param userReqDTO username, password
      */
     @Transactional
     public void join(UserReqDTO userReqDTO) {
+        // 해당 사용자가 이미 가입됐는지 확인
         Optional<User> joinedUser = userRepository.findOptionalByUsername(userReqDTO.getUsername());
-
         if (joinedUser.isPresent()) {
-
             return;
         }
 
+        // 객체 조립
         User user = User.builder()
                 .username(userReqDTO.getUsername())
                 .password(passwordEncoder.encode(userReqDTO.getPassword()))
@@ -44,32 +45,42 @@ public class UserService {
                 .role(Role.USER)
                 .build();
 
+        // 저장
         userRepository.save(user);
     }
 
     /**
-     * login: 로그인에 대한 비즈니스 로직
+     * @implNote 로그인 및 JwtToken 반환
+     * @param userReqDTO username, password
+     * @return JwtToken
      */
     @Transactional
     public JwtToken login(UserReqDTO userReqDTO) {
+        // 해당 사용자가 존재하는지 확인
         Optional<User> joinedUser = userRepository.findOptionalByUsername(userReqDTO.getUsername());
-
         if (joinedUser.isEmpty()) {
             throw new IllegalArgumentException("해당 사용자가 존재하지 않습니다.");
         }
 
+        // 존재한다면 로그인
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userReqDTO.getUsername(), userReqDTO.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        JwtToken token = jwtProvider.generateJwtToken(authentication); // 로그인할 때마다 accessToken + refreshToken 갱신
-        
-        joinedUser.get().setRefreshToken(token.getRefreshToken()); // refreshToken 값은 DB에 저장
+
+        // accessToken + refreshToken 갱신
+        JwtToken token = jwtProvider.generateJwtToken(authentication);
+        // refreshToken 값은 DB에 저장
+        joinedUser.get().setRefreshToken(token.getRefreshToken());
 
         return token;
     }
 
+    /**
+     * @implNote 아이디를 통해 회원을 조회하여 User 반환
+     * @param username 계정 아이디
+     * @return User
+     */
     @Transactional
     public User selectUser(String username) {
-
         return userRepository.findOptionalByUsername(username)
                 .orElseThrow(()->{
                     return new IllegalArgumentException("해당 회원을 찾을 수 없습니다.");

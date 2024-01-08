@@ -31,9 +31,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         }
     }
 
-    /**
-     * doFilterInternal: 요청과 응답을 가로채서 사용자의 인증 및 권한 부여
-     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String accessToken = jwtProvider.resolveAccessToken(request);
@@ -48,8 +45,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             }
             // accessToken이 만료되고 refreshToken이 존재한다면
             else if (!jwtProvider.validateToken(accessToken) && refreshToken != null) {
-                // 재발급 후, 컨텍스트에 다시 넣기
-                boolean validateRefreshToken = jwtProvider.validateToken(refreshToken); // 리프레시 토큰 검증
+                // 재발급 후, Context에 다시 넣기
+                boolean validateRefreshToken = jwtProvider.validateToken(refreshToken); // refreshToken 검증
 
                 // 데이터베이스의 refreshToken과 비교
                 UserDetails user = getUserDetailsByUsername(jwtProvider.parseClaims(refreshToken).getSubject());
@@ -62,7 +59,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     String newAccessToken = jwtProvider.generateAccessToken(user);
                     // 새로운 accessToken 응답
                     response.addHeader("Authorization", "Bearer " + newAccessToken);
-                    /// 컨텍스트에 넣기
+                    /// Context에 넣기
                     Authentication authentication = jwtProvider.getAuthentication(newAccessToken);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
